@@ -1,0 +1,17 @@
+# .gitignore
+
+# Ignore log files
+logs/
+
+# Ignore temporary files
+*.swp
+*.bak
+*~
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Python bytecode or editor-specific stuff if needed
+__pycache__/
+.env
