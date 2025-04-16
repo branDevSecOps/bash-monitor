@@ -23,3 +23,22 @@ echo -e "System Monitoring Dashboard"
 echo -e "Host: ${HOSTNAME} | Time: ${DATE}"
 echo -e "==============================${NC}"
 
+# Function to print section headers
+section() {
+  echo -e "\n${YELLOW}--- $1 ---${NC}"
+}
+
+# ========== CPU Load ==========
+section "CPU Load Average"
+# Get load average from uptime
+uptime | awk -F'load average:' '{ print "Load (1/5/15 min):" $2 }'
+
+# ========== Memory Usage ==========
+section "Memory Usage (MB)"
+# Use 'free' and extract used/total memory
+free -m | awk 'NR==2{ printf "Used: %sMB | Total: %sMB | Free: %sMB\n", $3, $2, $4 }'
+
+# ========== Disk Usage ==========
+section "Disk Usage (root volume)"
+# Get disk space info for root (/) only
+df -h / | awk 'NR==2 { printf "Used: %s | Total: %s | Free: %s | Usage: %s\n", $3, $2, $4, $5 }'
