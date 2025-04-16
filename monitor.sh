@@ -89,3 +89,6 @@ LOG_FILE="$LOG_DIR/system-report-$(date +'%Y-%m-%d_%H-%M-%S').log"
 # Redirect everything printed with 'echo' to tee (logs + stdout)
 exec > >(tee -a "$LOG_FILE") 2>&1
 
+echo -e "${CYAN}\n📁 Log saved to: ${LOG_FILE}${NC}"
+
+
