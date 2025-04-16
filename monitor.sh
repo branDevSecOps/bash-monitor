@@ -42,3 +42,11 @@ free -m | awk 'NR==2{ printf "Used: %sMB | Total: %sMB | Free: %sMB\n", $3, $2, 
 section "Disk Usage (root volume)"
 # Get disk space info for root (/) only
 df -h / | awk 'NR==2 { printf "Used: %s | Total: %s | Free: %s | Usage: %s\n", $3, $2, $4, $5 }'
+# ========== Top 5 Memory-Hungry Processes ==========
+section "Top 5 Memory-Consuming Processes"
+ps aux --sort=-%mem | awk 'NR<=6{ printf "%-10s %-8s %-6s %-6s %s\n", $1, $2, $3, $4, $11 }'
+
+# ========== Top 5 CPU-Hungry Processes ==========
+section "Top 5 CPU-Consuming Processes"
+ps aux --sort=-%cpu | awk 'NR<=6{ printf "%-10s %-8s %-6s %-6s %s\n", $1, $2, $3, $4, $11 }'
+
