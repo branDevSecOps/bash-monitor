@@ -42,6 +42,7 @@ free -m | awk 'NR==2{ printf "Used: %sMB | Total: %sMB | Free: %sMB\n", $3, $2, 
 section "Disk Usage (root volume)"
 # Get disk space info for root (/) only
 df -h / | awk 'NR==2 { printf "Used: %s | Total: %s | Free: %s | Usage: %s\n", $3, $2, $4, $5 }'
+
 # ========== Top 5 Memory-Hungry Processes ==========
 section "Top 5 Memory-Consuming Processes"
 ps aux --sort=-%mem | awk 'NR<=6{ printf "%-10s %-8s %-6s %-6s %s\n", $1, $2, $3, $4, $11 }'
@@ -50,3 +51,31 @@ ps aux --sort=-%mem | awk 'NR<=6{ printf "%-10s %-8s %-6s %-6s %s\n", $1, $2, $3
 section "Top 5 CPU-Consuming Processes"
 ps aux --sort=-%cpu | awk 'NR<=6{ printf "%-10s %-8s %-6s %-6s %s\n", $1, $2, $3, $4, $11 }'
 
+# ========== RAM Alert ==========
+section "RAM Usage Check"
+
+# Extract total and used memory in MB
+MEM_TOTAL=$(free -m | awk 'NR==2 {print $2}')
+MEM_USED=$(free -m | awk 'NR==2 {print $3}')
+MEM_PERCENT=$(( 100 * MEM_USED / MEM_TOTAL ))
+
+echo -e "Current RAM usage: ${MEM_USED}MB / ${MEM_TOTAL}MB (${MEM_PERCENT}%)"
+
+if [ "$MEM_PERCENT" -gt 80 ]; then
+  echo -e "${RED}⚠️ ALERT: RAM usage exceeds 80%!${NC}"
+else
+  echo -e "${GREEN}✅ RAM usage is within safe range.${NC}"
+fi
+
+# ========== Disk Alert ==========
+section "Disk Usage Check"
+
+# Get disk usage % for root volume (strip % sign)
+DISK_PERCENT=$(df / | awk 'NR==2 {gsub(/%/, "", $5); print $5}')
+echo -e "Root disk usage: ${DISK_PERCENT}%"
+
+if [ "$DISK_PERCENT" -gt 85 ]; then
+  echo -e "${RED}⚠️ ALERT: Disk usage exceeds 85%!${NC}"
+else
+  echo -e "${GREEN}✅ Disk usage is within safe range.${NC}"
+fi
