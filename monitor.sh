@@ -79,3 +79,13 @@ if [ "$DISK_PERCENT" -gt 85 ]; then
 else
   echo -e "${GREEN}✅ Disk usage is within safe range.${NC}"
 fi
+
+# ========== Logging Setup ==========
+LOG_DIR="./logs"
+mkdir -p "$LOG_DIR"
+
+LOG_FILE="$LOG_DIR/system-report-$(date +'%Y-%m-%d_%H-%M-%S').log"
+
+# Redirect everything printed with 'echo' to tee (logs + stdout)
+exec > >(tee -a "$LOG_FILE") 2>&1
+
